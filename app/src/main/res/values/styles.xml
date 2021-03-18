@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="no_animation_theme" parent="Theme.MOBEChallenge">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>
