@@ -9,7 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MOBEChallenge">
-        <activity android:name=".threads.GameThread"></activity>
         <activity
             android:name=".activities.EndMenuActivity"
             android:theme="@style/no_animation_theme" />

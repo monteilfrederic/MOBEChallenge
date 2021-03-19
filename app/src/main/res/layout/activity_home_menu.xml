@@ -3,12 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <ImageView
+        android:layout_width="600dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/start_game_button"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/logo"/>
+
+    <TextView
         android:id="@+id/start_game_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
         android:text="@string/start_game_button_text"
-        android:onClick="click"
-        android:layout_centerInParent="true"/>
+        android:fontFamily="@font/minecraft"
+        android:textSize="75sp"
+        android:onClick="click"/>
+
+    <ImageView
+        android:id="@+id/leaderboard_button1"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/start_game_button"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/leaderboard_icon"/>
 
 </RelativeLayout>
