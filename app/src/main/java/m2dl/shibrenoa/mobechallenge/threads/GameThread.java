@@ -1,6 +1,8 @@
 package m2dl.shibrenoa.mobechallenge.threads;
 
+import android.graphics.Canvas;
 import android.os.Handler;
+import android.view.SurfaceHolder;
 
 import m2dl.shibrenoa.mobechallenge.views.GameView;
 
@@ -10,14 +12,19 @@ import m2dl.shibrenoa.mobechallenge.views.GameView;
 public class GameThread extends Thread {
 
     /**
+     * Délai entre les affichages (ms).
+     */
+    private static final int DRAWING_DELAY = 1;
+
+    /**
+     * Instance du holder de la surface.
+     */
+    private final SurfaceHolder surfaceHolder;
+
+    /**
      * Instance de la GameView.
      */
     private final GameView gameView;
-
-    /**
-     * Instance du handler.
-     */
-    private final Handler handler;
 
     /**
      * Permet d'indiquer si le thread est en marche.
@@ -27,10 +34,46 @@ public class GameThread extends Thread {
     /**
      * Contructeur public.
      */
-    public GameThread(GameView gameView) {
+    public GameThread(SurfaceHolder surfaceHolder, GameView gameView) {
         super();
+        this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
-        handler = new Handler();
+        gameView.setTargetSpawnDelay(10);
+    }
+
+    /**
+     * Méthode permettant d'afficher le jeu périodiquement.
+     */
+    @Override
+    public void run() {
+
+        // Déclaration des variables
+        Canvas canvas = null;
+        while (running) {
+            try {
+                canvas = surfaceHolder.lockCanvas();
+                synchronized (surfaceHolder) {
+
+                    // On fait appel aux méthodes de la GameView
+                    gameView.draw(canvas);
+
+                }
+                try {
+                    sleep(DRAWING_DELAY);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+            } finally {
+                if (canvas != null) {
+                    try {
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     /**
