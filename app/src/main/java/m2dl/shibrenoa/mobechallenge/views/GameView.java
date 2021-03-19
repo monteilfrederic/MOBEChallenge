@@ -24,8 +24,13 @@ import m2dl.shibrenoa.mobechallenge.threads.DepthThread;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
-    * Délais entre les apparitions de cibles.
-    */
+     * Vitesse de rebond de la balle (formule).
+     */
+    private static int SPEED_BOUNCE = 10;
+
+    /**
+     * Délais entre les apparitions d'ennemis.
+     */
     private int targetSpawnDelay;
 
     /**
@@ -104,7 +109,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         decodageImages();
         setFocusable(true);
         // TODO : mettre lorsque fin du jeu
-        //getContext().startActivity(new Intent(getContext(), EndMenuActivity.class));
+        //getContext().startActivity(new Intent(getContext(), EndMenuActivity.class).putExtra("score", 999));
 
     }
 
@@ -131,7 +136,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     (coordonneesCible.getY() % (getHeight() - 400)) + 350), null);
 
             // On affiche la balle
-            canvas.drawCircle(ball.getX(), ball.getY(),ball.getRadius(), ballePaint);
+            canvas.drawCircle(ball.getX(), ball.getY(), ball.getRadius(), ballePaint);
 
         }
     }
@@ -142,7 +147,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
-        ball = new Ball(getWidth()/2f,getHeight()/2f, Ball.RADIUS_MIN+1);
+        ball = new Ball(getWidth() / 2f, getHeight() / 2f, Ball.RADIUS_MIN + 1);
 
         targetManagerThread.setRunning(true);
         targetManagerThread.start();

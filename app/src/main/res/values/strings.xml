@@ -10,4 +10,5 @@
     <string name="second_rank">2nd</string>
     <string name="first_rank">1st</string>
     <string name="leaderboard_title_text">meilleurs scores</string>
+    <string name="saved_score_button_text">score enregistre !</string>
 </resources>

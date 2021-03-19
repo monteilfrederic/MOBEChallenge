@@ -138,7 +138,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             // On crée une TextView pour le score
             TextView scoreTextView = new TextView(this);
             scoreTextView.setPadding(50, 0, 0, 0);
-            scoreTextView.setText(Integer.toString(bestScores.get(i).getTotal()));
+            scoreTextView.setText(String.format("%05d", bestScores.get(i).getTotal()));
             scoreTextView.setTypeface(font);
             scoreTextView.setTextSize(35);
             row.addView(scoreTextView);
