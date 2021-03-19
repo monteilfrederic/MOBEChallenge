@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -16,6 +18,7 @@ import java.util.Random;
 import m2dl.shibrenoa.mobechallenge.R;
 import m2dl.shibrenoa.mobechallenge.dto.Coordonnees;
 import m2dl.shibrenoa.mobechallenge.dto.Ball;
+import m2dl.shibrenoa.mobechallenge.listener.AcceleroSensor;
 import m2dl.shibrenoa.mobechallenge.threads.ChangeBallCapacityThread;
 import m2dl.shibrenoa.mobechallenge.threads.TargetManagerThread;
 import m2dl.shibrenoa.mobechallenge.threads.DrawingThread;
@@ -59,9 +62,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private final DepthThread depthThread;
 
     /**
+<<<<<<< HEAD
      * Thread s'occupant du changement de balle.
      */
     private final ChangeBallCapacityThread changeBallCapacityThread;
+
+
+     /**
+     * Listener s'occupant du mouvement de la balle.
+     */
+    private final AcceleroSensor acceleroSensor;
 
     /**
      * Increment du changement de radius;
@@ -89,6 +99,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private final SensorManager sensorManager;
 
     /**
+     * Multiplicateur de vitesse de la balle (+ c'est grand, plus la balle se deplace vite)
+     */
+    private float multiplyMove = 10.0f;
+
+    /**
      * Constructeur public initialisant les threads.
      *
      * @param context Contexte de la surfaceView
@@ -111,7 +126,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // TODO : mettre lorsque fin du jeu
         //getContext().startActivity(new Intent(getContext(), EndMenuActivity.class).putExtra("score", 999));
 
+        acceleroSensor = new AcceleroSensor(this);
+        Sensor accelerometre = getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        getSensorManager().registerListener(acceleroSensor, accelerometre, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
+
 
     /**
      * {@inheritDoc}
@@ -264,6 +284,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.targetSpawnDelay = targetSpawnDelay;
     }
 
+
     /**
      * Setter speedBounce
      *
@@ -289,5 +310,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public SensorManager getSensorManager() {
         return sensorManager;
+    }
+
+
+    /**
+     * Deplace la balle sur l'axe horizontal
+     * @param x
+     */
+    public void moveBallHorizon(float x) {
+        if (ball.getX() < 0 ) {
+            ball.setX(getWidth());
+        } else {
+            int xint = (int) (x * multiplyMove);
+            ball.setX((ball.getX() - xint) % getWidth());
+        }
+    }
+
+    /**
+     * Deplace la balle sur l'axe vertical
+     *
+     * @param y
+     */
+    public void moveBallVertical(float y) {
+        if (ball.getY() < 0 ) {
+            ball.setY(getHeight());
+        }
+        int yint = (int) (y*multiplyMove);
+        ball.setY((ball.getY()+yint) % getHeight());
     }
 }
