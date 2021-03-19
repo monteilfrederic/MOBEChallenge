@@ -14,8 +14,8 @@ import android.view.SurfaceView;
 import java.util.Random;
 
 import m2dl.shibrenoa.mobechallenge.R;
-import m2dl.shibrenoa.mobechallenge.DTO.Coordonnees;
-import m2dl.shibrenoa.mobechallenge.DTO.Ball;
+import m2dl.shibrenoa.mobechallenge.dto.Coordonnees;
+import m2dl.shibrenoa.mobechallenge.dto.Ball;
 import m2dl.shibrenoa.mobechallenge.threads.ChangeBallCapacityThread;
 import m2dl.shibrenoa.mobechallenge.threads.TargetManagerThread;
 import m2dl.shibrenoa.mobechallenge.threads.DrawingThread;
