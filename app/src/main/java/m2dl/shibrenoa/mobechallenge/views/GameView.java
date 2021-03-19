@@ -19,11 +19,15 @@ import android.view.SurfaceView;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import m2dl.shibrenoa.mobechallenge.R;
+import m2dl.shibrenoa.mobechallenge.activities.EndMenuActivity;
 import m2dl.shibrenoa.mobechallenge.dto.Coordonnees;
 import m2dl.shibrenoa.mobechallenge.dto.Ball;
+import m2dl.shibrenoa.mobechallenge.dto.Life;
 import m2dl.shibrenoa.mobechallenge.listener.AcceleroSensor;
 import m2dl.shibrenoa.mobechallenge.threads.ChangeBallCapacityThread;
 import m2dl.shibrenoa.mobechallenge.threads.DrawingThread;
@@ -65,6 +69,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Affichage du score
      */
     private Paint score;
+
+    /**
+     * Taille des vies.
+     */
+    private int lifeSize;
+
+    /**
+     * Liste de coordonnées des vies.
+     */
+    private List<Life> lives;
 
     /**
      * Coordonnées de la cible actuelle.
@@ -113,6 +127,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * Vibreur.
+     * Gestionnaire des capteurs.
      */
     private final Vibrator vibrator;
 
@@ -120,6 +135,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Gestionnaire des capteurs.
      */
     private final SensorManager sensorManager;
+
+    /**
+     * Images des vies.
+     */
+    private Bitmap emptyLife;
+    private Bitmap fullLife;
 
     /**
      * Constructeur public initialisant les threads.
@@ -176,8 +197,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             // On affiche la balle
             canvas.drawCircle(ball.getX(), ball.getY(), ball.getRadius(), ballePaint);
 
+            // On affiche chacune des vies
+            for (Life life : lives) {
+                if (life.isActive()) {
+                    canvas.drawBitmap(fullLife, null, new Rect(life.getX(), life.getY(),
+                            life.getX() + lifeSize, life.getY() + lifeSize), null);
+                } else {
+                    canvas.drawBitmap(emptyLife, null, new Rect(life.getX(), life.getY(),
+                            life.getX() + lifeSize, life.getY() + lifeSize), null);
+                }
+            }
+
             // On affiche le score actuel du joueur
-            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 400, 100, score);
+            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 400,  lifeSize + 100, score);
 
         }
     }
@@ -189,6 +221,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
         ball = new Ball(getWidth() / 2f, getHeight() / 2f, Ball.RADIUS_MIN + 1);
+
+        lifeSize = 100;
+        lives = new ArrayList<>();
+        for (int i = nbLives; i >= 0; i--) {
+            lives.add(new Life(getWidth() - (i + 1) * lifeSize - (i + 1) * 25, 25));
+        }
 
         Typeface customTypeFace = ResourcesCompat.getFont(getContext(), R.font.pixeboy);
         score = new Paint();
@@ -230,6 +268,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 drawingThread.setRunning(false);
                 drawingThread.join();
 
+                cibleBitmap = null;
+                emptyLife = null;
+                fullLife = null;
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -265,6 +307,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 // On augmente le score actuel
                 valeurScore += POINTS;
+
+            } else if (nbLives == 0){
+                // Sinon on a plus qu'une vie, on arrête les threads et on change d'activité
+                changeBallCapacityThread.setRunning(false);
+                depthThread.setRunning(false);
+                drawingThread.setRunning(false);
+
+                // On change d'activité
+                Intent intent = new Intent(getContext(), EndMenuActivity.class);
+                intent.putExtra("score", valeurScore);
+                getContext().startActivity(intent);
+
+            } else {
+                // Sinon on perd une vie
+                lives.get(nbLives).setActive(false);
+                nbLives--;
             }
 
             // Lorsque la balle touche le sol, on change la position de la cible.
@@ -289,6 +347,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void decodageImages() {
         // On décode les différentes images
         cibleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cible);
+        emptyLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_vide);
+        fullLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_pleine);
     }
 
     /**
