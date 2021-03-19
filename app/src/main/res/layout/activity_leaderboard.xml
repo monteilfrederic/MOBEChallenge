@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="175dp"
             android:fontFamily="@font/minecraft"
             android:text="@string/leaderboard_title_text"
             android:textSize="50sp" />
@@ -21,7 +21,7 @@
         <TableLayout
             android:id="@+id/scores_table_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_below="@id/leaderboard_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"/>
@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/scores_table_layout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
             android:fontFamily="@font/minecraft"
             android:onClick="click"
             android:text="@string/home_menu_button_text"

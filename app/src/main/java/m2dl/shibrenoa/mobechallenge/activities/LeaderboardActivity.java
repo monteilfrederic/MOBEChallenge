@@ -51,6 +51,26 @@ public class LeaderboardActivity extends AppCompatActivity {
         // On initialise la view avec la page des scores
         setContentView(R.layout.activity_leaderboard);
 
+        // On indique que les scores sont en train d'être chargés
+        TableLayout bestScoresTableLayout = findViewById(R.id.scores_table_layout);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/minecraft.ttf");
+        for (int i = 0; i < 5; i++) {
+
+            // On crée une ligne
+            TableRow row = new TableRow(this);
+            if (i > 0)
+                row.setPadding(0, 10, 0, 0);
+
+            // On ajoute des petits points
+            TextView dotsTextView = new TextView(this);
+            dotsTextView.setText("...");
+            dotsTextView.setTypeface(font);
+            dotsTextView.setTextSize(35);
+            row.addView(dotsTextView);
+            bestScoresTableLayout.addView(row);
+
+        }
+
         // Initialisation du gestionnaire de Firebase
         firebaseManager = new FirebaseManager();
         displayBestScores();
