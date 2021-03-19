@@ -28,17 +28,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Taille de la cible
      */
-    private static int TARGET_SIZE = 350;
+    private static final int TARGET_INTERVAL = 300;
 
     /**
-    * Délais entre les apparitions d'ennemis.
-    */
-    private int targetSpawnDelay;
+     * Taille de la cible
+     */
+    private static final int TARGET_MARGIN = 150;
+
+    /**
+     * Taille de la cible
+     */
+    private static final int TARGET_SIZE = 350;
 
     /**
      * Nombre de vies restantes.
      */
     private int nbLives = 2;
+
+    /**
+    * Délais entre les apparitions d'ennemis.
+    */
+    private int targetSpawnDelay;
 
     /**
      * Coordonnées de la cible actuelle.
@@ -59,7 +69,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Thread s'occupant du changement de balle.
      */
     private final ChangeBallCapacityThread changeBallCapacityThread;
-
 
      /**
      * Listener s'occupant du mouvement de la balle.
@@ -142,10 +151,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On affiche la cible
             // On récupère les coordonnées des cibles modulo la taille de l'écran -400 pour garder de la marge afin que la cible ne touche pas les bords
-            canvas.drawBitmap(cibleBitmap, null, new Rect((int)(coordonneesCible.getX() % (getWidth() - 400)) + 150,
-                    (int)(coordonneesCible.getY() % (getHeight() - 400)) + 150,
-                    (int)(coordonneesCible.getX() % (getWidth() - 400)) + TARGET_SIZE,
-                    (int)(coordonneesCible.getY() % (getHeight() - 400)) + TARGET_SIZE), null);
+            canvas.drawBitmap(cibleBitmap, null, new Rect((int)(coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL)) + TARGET_MARGIN,
+                    (int)(coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL)) + TARGET_MARGIN,
+                    (int)(coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL)) + TARGET_SIZE,
+                    (int)(coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL)) + TARGET_SIZE), null);
 
             // On affiche la balle
             canvas.drawCircle(ball.getX(), ball.getY(), ball.getRadius(), ballePaint);
@@ -215,10 +224,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         depthThread.setDepthDelay((int)calc);
         if (ball.getRadius() == Ball.RADIUS_MIN) {
             // La hitbox de la cible.
-            float coordonneesCibleXMin = coordonneesCible.getX() % (getWidth() - 400) + 150;
-            float coordonneesCibleXMax = coordonneesCible.getX() % (getWidth() - 400) + TARGET_SIZE;
-            float coordonneesCibleYMin = coordonneesCible.getY() % (getHeight() - 400) + 150;
-            float coordonneesCibleYMax = coordonneesCible.getY() % (getWidth() - 400) + TARGET_SIZE;
+            float coordonneesCibleXMin = coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL) + TARGET_MARGIN;
+            float coordonneesCibleXMax = coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL) + TARGET_SIZE;
+            float coordonneesCibleYMin = coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL) + TARGET_MARGIN;
+            float coordonneesCibleYMax = coordonneesCible.getY() % (getWidth() - TARGET_INTERVAL) + TARGET_SIZE;
 
             // Si les coordonnées de la balle sont dans la cible, on compte un point
             if ((xBall <= coordonneesCibleXMax && xBall >= coordonneesCibleXMin) &&
