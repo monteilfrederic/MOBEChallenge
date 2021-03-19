@@ -20,6 +20,7 @@ import m2dl.shibrenoa.mobechallenge.activities.EndMenuActivity;
 import m2dl.shibrenoa.mobechallenge.threads.TargetManagerThread;
 import m2dl.shibrenoa.mobechallenge.threads.DrawingThread;
 import m2dl.shibrenoa.mobechallenge.threads.DepthThread;
+
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
@@ -79,6 +80,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public GameView(Context context) {
         super(context);
+        getHolder().addCallback(this);
+
         // Initialisation des threads
         targetManagerThread = new TargetManagerThread(this);
         drawingThread = new DrawingThread(getHolder(), this);
