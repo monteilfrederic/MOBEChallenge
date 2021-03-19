@@ -31,11 +31,13 @@ public class HomeMenuActivity extends AppCompatActivity {
     }
 
     /**
-     * Méthode lançant le jeu
+     * Méthode gérant les clicks
      */
     public void click(View view) {
         if (view.getId() == R.id.start_game_button) {
             startActivity(new Intent(this, GameActivity.class));
+        } else if (view.getId() == R.id.leaderboard_button1) {
+            startActivity(new Intent(this, LeaderboardActivity.class));
         }
     }
 

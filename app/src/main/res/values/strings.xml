@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">MOBEChallenge</string>
-    <string name="start_game_button_text">Jouer</string>
-    <string name="restart_game_button_text">Rejouer</string>
+    <string name="app_name">BILBOQUET</string>
+    <string name="start_game_button_text">jouer</string>
+    <string name="save_score_button_text">enregistrer</string>
+    <string name="restart_game_button_text">rejouer</string>
+    <string name="home_menu_button_text">menu</string>
 </resources>
