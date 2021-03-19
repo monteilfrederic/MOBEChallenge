@@ -209,7 +209,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             // On affiche le score actuel du joueur
-            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 400,  lifeSize + 100, score);
+            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 265,  lifeSize + 100, score);
 
         }
     }
