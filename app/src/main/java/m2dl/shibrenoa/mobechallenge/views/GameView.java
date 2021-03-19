@@ -53,7 +53,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Points gagnés pour une cible atteinte
      */
-    public static final int POINTS = 10;
+    public int points = 10;
 
     /**
      * Nombre de vies restantes.
@@ -71,9 +71,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint score;
 
     /**
+     * Compteur de combo (cibles touchées d'affilée)
+     */
+    private int comboCount = 0;
+
+    /**
+     * Affichage du compteur combo
+     */
+    private Paint combo;
+
+    /**
      * Image du fond du jeu.
      */
     private Bitmap backgroundBitmap;
+
+    /**
+     * Image du fond du jeu en verre
+     */
+    private Bitmap backgroundGlassBitmap;
 
     /**
      * Taille des vies.
@@ -147,6 +162,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap emptyLife;
     private Bitmap fullLife;
 
+
+
     /**
      * Constructeur public initialisant les threads.
      *
@@ -188,6 +205,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On peint le fond
             canvas.drawBitmap(backgroundBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
+            canvas.drawBitmap(backgroundGlassBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
 
             // On peint la balle
             Paint ballePaint = new Paint();
@@ -215,8 +233,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
-            // On affiche le score actuel du joueur
+            // On affiche le score actuel du joueur et son combo
             canvas.drawText(String.format("%05d", valeurScore), getWidth() - 370,  lifeSize + 125, score);
+
+            // Changement de la couleur du texte selon le combo
+            if (comboCount >= 5 && comboCount < 10) {
+                combo.setColor(Color.YELLOW);
+                combo.setTextSize(175);
+                points = 15;
+            } else if (comboCount >= 10) {
+                combo.setColor(Color.RED);
+                combo.setTextSize(200);
+                points += 20;
+            } else {
+                combo.setColor(Color.WHITE);
+                points = 10;
+            }
+            canvas.drawText(comboCount+"", 125,  lifeSize + 125, combo);
 
         }
     }
@@ -240,6 +273,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         score.setColor(Color.WHITE);
         score.setTextSize(100);
         score.setTypeface(font);
+
+        combo = new Paint();
+        combo.setColor(Color.WHITE);
+        combo.setTextSize(150);
+        combo.setTypeface(font);
 
         changeBallCapacityThread.setRunning(true);
         changeBallCapacityThread.start();
@@ -314,20 +352,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     (yBall <= coordonneesCibleYMax && yBall >= coordonneesCibleYMin)) {
 
                 // On augmente le score actuel
-                valeurScore += POINTS;
+                valeurScore += points;
+                comboCount++;
 
             } else if (nbLives == 0){
+                // Le compteur combo revient à 0
+                comboCount = 0;
+
                 // Sinon on a plus qu'une vie, on arrête les threads et on change d'activité
-                try {
                     changeBallCapacityThread.setRunning(false);
-                    changeBallCapacityThread.join();
                     depthThread.setRunning(false);
-                    depthThread.join();
                     drawingThread.setRunning(false);
-                    drawingThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
                 // On change d'activité
                 Intent intent = new Intent(getContext(), EndMenuActivity.class);
@@ -335,9 +370,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 getContext().startActivity(intent);
 
             } else {
-                // Sinon on perd une vie
+                // Sinon on perd une vie et le compteur de combo
                 lives.get(nbLives).setActive(false);
                 nbLives--;
+                comboCount = 0;
             }
 
             // Lorsque la balle touche le sol, on change la position de la cible.
@@ -362,6 +398,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void decodageImages() {
         // On décode les différentes images
         backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wood);
+        backgroundGlassBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.glass);
         cibleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cible);
         emptyLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_vide);
         fullLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_pleine);
