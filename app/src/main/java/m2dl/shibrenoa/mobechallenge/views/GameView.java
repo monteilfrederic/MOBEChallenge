@@ -350,11 +350,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * @param x
      */
     public void moveBallHorizon(float x) {
-        if (ball.getX() < 0 ) {
-            ball.setX(getWidth());
-        } else {
-            int xint = (int) (x * multiplyMove);
-            ball.setX((ball.getX() - xint) % getWidth());
+        if(ball!=null) {
+            if (ball.getX() < 0) {
+                ball.setX(getWidth());
+            } else {
+                int xint = (int) (x * multiplyMove);
+                ball.setX((ball.getX() - xint) % getWidth());
+            }
         }
     }
 
@@ -364,10 +366,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * @param y
      */
     public void moveBallVertical(float y) {
-        if (ball.getY() < 0 ) {
-            ball.setY(getHeight());
+        if(ball!=null) {
+            if (ball.getY() < 0) {
+                ball.setY(getHeight());
+            } else {
+                int yint = (int) (y * multiplyMove);
+                ball.setY((ball.getY() + yint) % getHeight());
+            }
         }
-        int yint = (int) (y*multiplyMove);
-        ball.setY((ball.getY()+yint) % getHeight());
     }
 }
