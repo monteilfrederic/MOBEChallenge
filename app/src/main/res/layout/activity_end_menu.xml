@@ -32,6 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/restart_game_button"
         android:layout_marginTop="50dp"
-        android:background="@drawable/leaderboard_icon"/>
+        android:background="@drawable/leaderboard_icon"
+        android:onClick="click"/>
 
 </RelativeLayout>
