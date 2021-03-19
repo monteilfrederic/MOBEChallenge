@@ -122,11 +122,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private final SensorManager sensorManager;
 
     /**
-     * Multiplicateur de vitesse de la balle (+ c'est grand, plus la balle se deplace vite)
-     */
-    private float multiplyMove = 10.0f;
-
-    /**
      * Constructeur public initialisant les threads.
      *
      * @param context Contexte de la surfaceView
@@ -141,7 +136,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Initialisation accelerometre
         acceleroSensor = new AcceleroSensor(this);
         Sensor accelerometre = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(acceleroSensor, accelerometre, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(acceleroSensor, accelerometre, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Initialisation des threads
         changeBallCapacityThread = new ChangeBallCapacityThread(this);
@@ -371,7 +366,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (ball.getX() < 0) {
                 ball.setX(getWidth());
             } else {
-                int xint = (int) (x * multiplyMove);
+                int xint = (int) x;
                 ball.setX((ball.getX() - xint) % getWidth());
             }
         }
@@ -387,7 +382,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (ball.getY() < 0) {
                 ball.setY(getHeight());
             } else {
-                int yint = (int) (y * multiplyMove);
+                int yint = (int) y;
                 ball.setY((ball.getY() + yint) % getHeight());
             }
         }
