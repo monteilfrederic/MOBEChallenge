@@ -104,6 +104,12 @@ public class EndMenuActivity extends AppCompatActivity {
             TextView saveScore = findViewById(R.id.save_score_button);
             saveScore.setText(R.string.saved_score_button_text);
             saveScore.setClickable(false);
+            up1.setClickable(false);
+            up2.setClickable(false);
+            up3.setClickable(false);
+            down1.setClickable(false);
+            down2.setClickable(false);
+            down3.setClickable(false);
         }
     }
 

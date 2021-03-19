@@ -1,6 +1,7 @@
 package m2dl.shibrenoa.mobechallenge.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -85,7 +86,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     private final ChangeBallCapacityThread changeBallCapacityThread;
 
-     /**
+    /**
      * Listener s'occupant du mouvement de la balle.
      */
     private final AcceleroSensor acceleroSensor;
@@ -172,16 +173,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On affiche la cible
             // On récupère les coordonnées des cibles modulo la taille de l'écran -400 pour garder de la marge afin que la cible ne touche pas les bords
-            canvas.drawBitmap(cibleBitmap, null, new Rect((int)(coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL)) + TARGET_MARGIN,
-                    (int)(coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL)) + TARGET_MARGIN,
-                    (int)(coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL)) + TARGET_SIZE,
-                    (int)(coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL)) + TARGET_SIZE), null);
+            canvas.drawBitmap(cibleBitmap, null, new Rect((int) (coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL)) + TARGET_MARGIN,
+                    (int) (coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL)) + TARGET_MARGIN,
+                    (int) (coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL)) + TARGET_SIZE,
+                    (int) (coordonneesCible.getY() % (getHeight() - TARGET_INTERVAL)) + TARGET_SIZE), null);
 
             // On affiche la balle
             canvas.drawCircle(ball.getX(), ball.getY(), ball.getRadius(), ballePaint);
 
             // On affiche le score actuel du joueur
-            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 400,  100, score);
+            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 400, 100, score);
 
         }
     }
@@ -248,10 +249,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * De plus, si la balle était dans la cible, on compte un point.
      */
     public void setCircleRadius() {
-        float calc = speedBounce * (ball.getRadius()/(Ball.RADIUS_MAX - Ball.RADIUS_MIN));
+        float calc = speedBounce * (ball.getRadius() / (Ball.RADIUS_MAX - Ball.RADIUS_MIN));
         float xBall = ball.getX();
         float yBall = ball.getY();
-        depthThread.setDepthDelay((int)calc);
+        depthThread.setDepthDelay((int) calc);
         if (ball.getRadius() == Ball.RADIUS_MIN) {
 
             // On fait vibrer le téléphone
@@ -362,10 +363,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * Deplace la balle sur l'axe horizontal
+     *
      * @param x
      */
     public void moveBallHorizon(float x) {
-        if(ball!=null) {
+        if (ball != null) {
             if (ball.getX() < 0) {
                 ball.setX(getWidth());
             } else {
@@ -381,7 +383,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * @param y
      */
     public void moveBallVertical(float y) {
-        if(ball!=null) {
+        if (ball != null) {
             if (ball.getY() < 0) {
                 ball.setY(getHeight());
             } else {
