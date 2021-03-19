@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
-import android.widget.Toast;
 
 import m2dl.shibrenoa.mobechallenge.views.GameView;
 
@@ -52,19 +51,11 @@ public class ChangeBallCapacityThread extends Thread {
     private boolean isSlowReady = false;
 
     /**
-     * Toast capacité prête.
-     */
-    private Toast toast;
-
-    /**
      * Contructeur public.
      */
     public ChangeBallCapacityThread(GameView gameView) {
         super();
         this.gameView = gameView;
-
-        //Toast capacité prête
-        toast = Toast.makeText(gameView.getContext(), "Ralentissement prêt ", Toast.LENGTH_SHORT);
 
         // Initialisation du capteur de lumière
         Sensor lightSensor = gameView.getSensorManager().getDefaultSensor(Sensor.TYPE_LIGHT);
@@ -108,7 +99,7 @@ public class ChangeBallCapacityThread extends Thread {
         public void run() {
             if (running) {
                 isSlowReady = false;
-                //gameView.setSnowflakeVisible(false);
+                gameView.setSnowflakeVisible(false);
                 gameView.setSpeedBounce(SPEED_BOUNCE_MAX);
                 handler.postDelayed(slowBallDisable, DIX_SECONDES);
             }
@@ -136,8 +127,7 @@ public class ChangeBallCapacityThread extends Thread {
         public void run() {
             if (running) {
                 isSlowReady = true;
-                toast.show();
-                //gameView.setSnowflakeVisible(true);
+                gameView.setSnowflakeVisible(true);
             }
         }
     };

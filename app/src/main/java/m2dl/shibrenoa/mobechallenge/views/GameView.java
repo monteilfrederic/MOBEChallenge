@@ -101,6 +101,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private List<Life> lives;
 
     /**
+     * Taille du flocon.
+     */
+    private int snowflakeSize;
+
+    /**
+     * Coordonnées du flocon de la compétence Slow.
+     */
+    private Life snowflake;
+
+    /**
      * Coordonnées de la cible actuelle.
      */
     volatile Coordonnees coordonneesCible;
@@ -162,7 +172,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap emptyLife;
     private Bitmap fullLife;
 
-
+    /**
+     * Images de la capacité de ralentissement.
+     */
+    private Bitmap snowflakeBitmap;
+    private Bitmap redSnowflakeBitmap;
 
     /**
      * Constructeur public initialisant les threads.
@@ -233,6 +247,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            // On affiche le flocon pour la compétence de ralentissement
+            if(snowflake.isActive()) {
+                canvas.drawBitmap(snowflakeBitmap, null, new Rect(snowflake.getX(), snowflake.getY(),
+                        snowflake.getX() + snowflakeSize, snowflake.getY() + snowflakeSize), null);
+            } else {
+                canvas.drawBitmap(redSnowflakeBitmap, null, new Rect(snowflake.getX(), snowflake.getY(),
+                        snowflake.getX() + snowflakeSize, snowflake.getY() + snowflakeSize), null);
+            }
+
             // On affiche le score actuel du joueur et son combo
             canvas.drawText(String.format("%05d", valeurScore), getWidth() - 370,  lifeSize + 125, score);
 
@@ -267,6 +290,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = nbLives; i >= 0; i--) {
             lives.add(new Life(getWidth() - (i + 1) * lifeSize - (i + 1) * 25, 25));
         }
+
+        snowflakeSize = 100;
+        snowflake = new Life(getWidth() - 125, 275);
+        snowflake.setActive(false);
 
         Typeface font = ResourcesCompat.getFont(getContext(), R.font.minecraft);
         score = new Paint();
@@ -317,6 +344,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 emptyLife = null;
                 fullLife = null;
                 backgroundBitmap = null;
+                snowflakeBitmap = null;
+                redSnowflakeBitmap = null;
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -402,6 +431,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         cibleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cible);
         emptyLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_vide);
         fullLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_pleine);
+        snowflakeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.snowflake);
+        redSnowflakeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.snowflake_red);
     }
 
     /**
@@ -500,4 +531,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
     }
+
+    /**
+     * Rend le flocon visible ou invisible
+     *
+     * @param visible
+     */
+    public void setSnowflakeVisible(boolean visible) {
+        snowflake.setActive(visible);
+    }
+
 }
