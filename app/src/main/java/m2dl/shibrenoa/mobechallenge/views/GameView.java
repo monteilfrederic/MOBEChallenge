@@ -8,10 +8,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.Random;
 
@@ -31,6 +34,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static int TARGET_SIZE = 350;
 
     /**
+     * Points gagnés pour une cible atteinte
+     */
+    public static final int POINTS = 10;
+
+    /**
     * Délais entre les apparitions d'ennemis.
     */
     private int targetSpawnDelay;
@@ -39,6 +47,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Nombre de vies restantes.
      */
     private int nbLives = 2;
+
+    /**
+     * Valeur du score actuel du joueur
+     */
+    private int valeurScore = 0;
+
+    /**
+     * Affichage du score
+     */
+    private Paint score;
 
     /**
      * Coordonnées de la cible actuelle.
@@ -133,9 +151,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if (canvas != null) {
 
-            // On peint le fond
-            canvas.drawColor(Color.WHITE);
-
             // On peint la balle
             Paint ballePaint = new Paint();
             ballePaint.setColor(Color.RED);
@@ -150,6 +165,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             // On affiche la balle
             canvas.drawCircle(ball.getX(), ball.getY(), ball.getRadius(), ballePaint);
 
+            // On affiche le score actuel du joueur
+            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 400,  100, score);
+
         }
     }
 
@@ -160,6 +178,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
 
         ball = new Ball(getWidth() / 2f, getHeight() / 2f, Ball.RADIUS_MIN + 1);
+
+        Typeface customTypeFace = ResourcesCompat.getFont(getContext(), R.font.pixeboy);
+        score = new Paint();
+        score.setColor(Color.WHITE);
+        score.setTextSize(100);
+        score.setTypeface(customTypeFace);
 
         changeBallCapacityThread.setRunning(true);
         changeBallCapacityThread.start();
@@ -214,18 +238,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         float yBall = ball.getY();
         depthThread.setDepthDelay((int)calc);
         if (ball.getRadius() == Ball.RADIUS_MIN) {
+
             // La hitbox de la cible.
             float coordonneesCibleXMin = coordonneesCible.getX() % (getWidth() - 400) + 150;
             float coordonneesCibleXMax = coordonneesCible.getX() % (getWidth() - 400) + TARGET_SIZE;
             float coordonneesCibleYMin = coordonneesCible.getY() % (getHeight() - 400) + 150;
-            float coordonneesCibleYMax = coordonneesCible.getY() % (getWidth() - 400) + TARGET_SIZE;
+            float coordonneesCibleYMax = coordonneesCible.getY() % (getHeight() - 400) + TARGET_SIZE;
 
             // Si les coordonnées de la balle sont dans la cible, on compte un point
             if ((xBall <= coordonneesCibleXMax && xBall >= coordonneesCibleXMin) &&
-                    (yBall <= coordonneesCibleYMax && yBall >= coordonneesCibleYMin) &&
-                    incrementRadius < 0) {
-                // Là où on compte un point
-                System.out.println("Oklm on est dedans");
+                    (yBall <= coordonneesCibleYMax && yBall >= coordonneesCibleYMin)) {
+
+                // On augmente le score actuel
+                valeurScore += POINTS;
+
             }
 
             // Lorsque la balle touche le sol, on change la position de la cible.
@@ -233,9 +259,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On modifie l'incrément du rayon de la balle, pour aller dans le sens inverse
             incrementRadius = -incrementRadius;
+
         } else if (ball.getRadius() == Ball.RADIUS_MAX) {
+
             incrementRadius = -incrementRadius;
+
         }
+
         ball.setRadius(ball.getRadius() + incrementRadius);
 
     }
