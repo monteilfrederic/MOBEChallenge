@@ -10,6 +10,8 @@ import android.graphics.Rect;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -44,11 +46,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Nombre de vies restantes.
      */
     private int nbLives = 2;
-
-    /**
-    * Délais entre les apparitions d'ennemis.
-    */
-    private int targetSpawnDelay;
 
     /**
      * Coordonnées de la cible actuelle.
@@ -96,6 +93,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap cibleBitmap;
 
     /**
+     * Vibreur.
+     */
+    private final Vibrator vibrator;
+
+    /**
      * Gestionnaire des capteurs.
      */
     private final SensorManager sensorManager;
@@ -117,19 +119,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Initialisation du gestionnaire de capteurs
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
+        // Initialisation accelerometre
+        acceleroSensor = new AcceleroSensor(this);
+        Sensor accelerometre = getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        getSensorManager().registerListener(acceleroSensor, accelerometre, SensorManager.SENSOR_DELAY_NORMAL);
+
         // Initialisation des threads
         changeBallCapacityThread = new ChangeBallCapacityThread(this);
         depthThread = new DepthThread(this);
         drawingThread = new DrawingThread(getHolder(), this);
 
+        // Initialisation du vibreur
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
         decodageImages();
         setFocusable(true);
         // TODO : mettre lorsque fin du jeu
         //getContext().startActivity(new Intent(getContext(), EndMenuActivity.class).putExtra("score", 999));
-
-        acceleroSensor = new AcceleroSensor(this);
-        Sensor accelerometre = getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        getSensorManager().registerListener(acceleroSensor, accelerometre, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -223,6 +229,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         float yBall = ball.getY();
         depthThread.setDepthDelay((int)calc);
         if (ball.getRadius() == Ball.RADIUS_MIN) {
+
+            // On fait vibrer le téléphone
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+
             // La hitbox de la cible.
             float coordonneesCibleXMin = coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL) + TARGET_MARGIN;
             float coordonneesCibleXMax = coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL) + TARGET_SIZE;
@@ -230,9 +240,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             float coordonneesCibleYMax = coordonneesCible.getY() % (getWidth() - TARGET_INTERVAL) + TARGET_SIZE;
 
             // Si les coordonnées de la balle sont dans la cible, on compte un point
-            if ((xBall <= coordonneesCibleXMax && xBall >= coordonneesCibleXMin) &&
-                    (yBall <= coordonneesCibleYMax && yBall >= coordonneesCibleYMin) &&
-                    incrementRadius < 0) {
+            if ((xBall <= coordonneesCibleXMax && xBall >= coordonneesCibleXMin)
+                    && (yBall <= coordonneesCibleYMax && yBall >= coordonneesCibleYMin)
+                    && incrementRadius < 0) {
                 // Là où on compte un point
                 System.out.println("Oklm on est dedans");
             }
@@ -261,10 +271,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Méthode d'ajout d'une cible.
      */
     public void addTarget() {
-        // Au lancement, le délai d'apparition est de 10ms, puis il est modifié
-        if (targetSpawnDelay == 10)
-            targetSpawnDelay = 3000;
-
         // On génère un nombre pour choisir aléatoirement la colonne du nouvel ennemi
         int x = new Random().nextInt(getWidth());
         int y = new Random().nextInt(getHeight());
@@ -290,15 +296,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Getter targetSpawnDelay
-     *
-     * @return targetSpawnDelay
-     */
-    public int getTargetSpawnDelay() {
-        return targetSpawnDelay;
-    }
-
-    /**
      * Getter coordonneesCible.
      *
      * @return coordonneesCible
@@ -308,17 +305,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Setter targetSpawnDelay
-     *
-     * @return targetSpawnDelay
-     */
-    public void setTargetSpawnDelay(int targetSpawnDelay) {
-        this.targetSpawnDelay = targetSpawnDelay;
-    }
-
-
-    /**
-     * Setter speedBounce
+     * Getter speedBounce
      *
      * @return speedBounce
      */
@@ -329,7 +316,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Setter speedBounce
      *
-     * @return speedBounce
+     * @param speedBounce
      */
     public void setSpeedBounce(int speedBounce) {
         this.speedBounce = speedBounce;
