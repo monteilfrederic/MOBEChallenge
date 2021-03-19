@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "546985832392",
+    "project_id": "challenge-mobe",
+    "storage_bucket": "challenge-mobe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546985832392:android:95b0bfbfd68f9784219afd",
+        "android_client_info": {
+          "package_name": "m2dl.shibrenoa.mobechallenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546985832392-5ndk61da168qealhc89ej9qk90eonjfb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9FzPyYk8HM2GQxg9U9gC-fC4VDxduIfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546985832392-5ndk61da168qealhc89ej9qk90eonjfb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
