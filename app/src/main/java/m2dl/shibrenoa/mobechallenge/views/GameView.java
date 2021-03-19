@@ -71,6 +71,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint score;
 
     /**
+     * Image du fond du jeu.
+     */
+    private Bitmap backgroundBitmap;
+
+    /**
      * Taille des vies.
      */
     private int lifeSize;
@@ -169,8 +174,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         decodageImages();
         setFocusable(true);
-        // TODO : mettre lorsque fin du jeu
-        //getContext().startActivity(new Intent(getContext(), EndMenuActivity.class).putExtra("score", 999));
 
     }
 
@@ -182,6 +185,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
+
+            // On peint le fond
+            canvas.drawBitmap(backgroundBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
 
             // On peint la balle
             Paint ballePaint = new Paint();
@@ -209,7 +215,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             // On affiche le score actuel du joueur
-            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 265,  lifeSize + 100, score);
+            canvas.drawText(String.format("%05d", valeurScore), getWidth() - 370,  lifeSize + 125, score);
 
         }
     }
@@ -228,11 +234,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             lives.add(new Life(getWidth() - (i + 1) * lifeSize - (i + 1) * 25, 25));
         }
 
-        Typeface customTypeFace = ResourcesCompat.getFont(getContext(), R.font.pixeboy);
+        Typeface font = ResourcesCompat.getFont(getContext(), R.font.minecraft);
         score = new Paint();
         score.setColor(Color.WHITE);
         score.setTextSize(100);
-        score.setTypeface(customTypeFace);
+        score.setTypeface(font);
 
         changeBallCapacityThread.setRunning(true);
         changeBallCapacityThread.start();
@@ -271,6 +277,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 cibleBitmap = null;
                 emptyLife = null;
                 fullLife = null;
+                backgroundBitmap = null;
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -346,6 +353,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     private void decodageImages() {
         // On décode les différentes images
+        backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wood);
         cibleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cible);
         emptyLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_vide);
         fullLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_pleine);

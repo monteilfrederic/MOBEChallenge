@@ -11,7 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:fontFamily="@font/minecraft" />
+        android:fontFamily="@font/minecraft"
+        android:textColor="@color/white" />
 
     <RelativeLayout
         android:id="@+id/score_layout"
@@ -44,6 +45,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/minecraft"
                 android:text="A"
+                android:textColor="@color/white"
                 android:textSize="75sp" />
 
             <ImageView
@@ -79,6 +81,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/minecraft"
                 android:text="A"
+                android:textColor="@color/white"
                 android:textSize="75sp" />
 
             <ImageView
@@ -116,6 +119,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/minecraft"
                 android:text="A"
+                android:textColor="@color/white"
                 android:textSize="75sp" />
 
             <ImageView
@@ -141,6 +145,7 @@
         android:fontFamily="@font/minecraft"
         android:onClick="click"
         android:text="@string/save_score_button_text"
+        android:textColor="@color/white"
         android:textSize="50sp" />
 
     <TextView
@@ -153,6 +158,7 @@
         android:fontFamily="@font/minecraft"
         android:onClick="click"
         android:text="@string/restart_game_button_text"
+        android:textColor="@color/white"
         android:textSize="50sp" />
 
     <ImageView

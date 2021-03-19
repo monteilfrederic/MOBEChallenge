@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -66,6 +67,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             dotsTextView.setText("...");
             dotsTextView.setTypeface(font);
             dotsTextView.setTextSize(35);
+            dotsTextView.setTextColor(Color.WHITE);
             row.addView(dotsTextView);
             bestScoresTableLayout.addView(row);
 
@@ -125,6 +127,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             rangTextView.setText(Integer.toString(i + 1));
             rangTextView.setTypeface(font);
             rangTextView.setTextSize(35);
+            rangTextView.setTextColor(Color.WHITE);
             row.addView(rangTextView);
 
             // On crée une TextView pour le nom
@@ -133,6 +136,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             nomTextView.setText(bestScores.get(i).getNom());
             nomTextView.setTypeface(font);
             nomTextView.setTextSize(35);
+            nomTextView.setTextColor(Color.WHITE);
             row.addView(nomTextView);
 
             // On crée une TextView pour le score
@@ -141,6 +145,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             scoreTextView.setText(String.format("%05d", bestScores.get(i).getTotal()));
             scoreTextView.setTypeface(font);
             scoreTextView.setTextSize(35);
+            scoreTextView.setTextColor(Color.WHITE);
             row.addView(scoreTextView);
 
             bestScoresTableLayout.addView(row);

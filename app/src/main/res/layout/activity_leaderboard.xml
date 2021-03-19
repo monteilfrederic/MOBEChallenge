@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/purple_200">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
             android:layout_marginTop="175dp"
             android:fontFamily="@font/minecraft"
             android:text="@string/leaderboard_title_text"
+            android:textColor="@color/white"
             android:textSize="50sp" />
 
         <TableLayout
@@ -35,6 +37,7 @@
             android:fontFamily="@font/minecraft"
             android:onClick="click"
             android:text="@string/home_menu_button_text"
+            android:textColor="@color/white"
             android:textSize="75sp" />
 
     </RelativeLayout>
