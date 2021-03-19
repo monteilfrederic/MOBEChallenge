@@ -76,6 +76,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap backgroundBitmap;
 
     /**
+     * Image du fond du jeu en verre
+     */
+    private Bitmap backgroundGlassBitmap;
+
+    /**
      * Taille des vies.
      */
     private int lifeSize;
@@ -147,6 +152,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap emptyLife;
     private Bitmap fullLife;
 
+
+
     /**
      * Constructeur public initialisant les threads.
      *
@@ -188,6 +195,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On peint le fond
             canvas.drawBitmap(backgroundBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
+            canvas.drawBitmap(backgroundGlassBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
 
             // On peint la balle
             Paint ballePaint = new Paint();
@@ -361,6 +369,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void decodageImages() {
         // On décode les différentes images
         backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wood);
+        backgroundGlassBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.glass);
         cibleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cible);
         emptyLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_vide);
         fullLife = BitmapFactory.decodeResource(getResources(), R.drawable.vie_pleine);
