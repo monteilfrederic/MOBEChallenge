@@ -1,7 +1,6 @@
 package m2dl.shibrenoa.mobechallenge.views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,10 +13,8 @@ import android.view.SurfaceView;
 import java.util.Random;
 
 import m2dl.shibrenoa.mobechallenge.R;
-import m2dl.shibrenoa.mobechallenge.threads.Coordonnees;
+import m2dl.shibrenoa.mobechallenge.DTO.Coordonnees;
 import m2dl.shibrenoa.mobechallenge.DTO.Ball;
-import m2dl.shibrenoa.mobechallenge.activities.EndMenuActivity;
-import m2dl.shibrenoa.mobechallenge.threads.TargetManagerThread;
 import m2dl.shibrenoa.mobechallenge.threads.DrawingThread;
 import m2dl.shibrenoa.mobechallenge.threads.DepthThread;
 
@@ -27,6 +24,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Vitesse de rebond de la balle (formule).
      */
     private static int SPEED_BOUNCE = 10;
+
+    /**
+     * Taille de la cible
+     */
+    private static int TARGET_SIZE = 350;
 
     /**
     * Délais entre les apparitions d'ennemis.
@@ -42,11 +44,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Coordonnées de la cible actuelle.
      */
     volatile Coordonnees coordonneesCible;
-
-    /**
-     * Thread s'occupant de faire apparaître les cibles
-     */
-    private final TargetManagerThread targetManagerThread;
 
     /**
      * Thread s'occupant de l'affichage
@@ -83,7 +80,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
 
         // Initialisation des threads
-        targetManagerThread = new TargetManagerThread(this);
         drawingThread = new DrawingThread(getHolder(), this);
         depthThread = new DepthThread(this);
         decodageImages();
@@ -110,10 +106,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On affiche la cible
             // On récupère les coordonnées des cibles modulo la taille de l'écran -400 pour garder de la marge afin que la cible ne touche pas les bords
-            canvas.drawBitmap(cibleBitmap, null, new Rect((coordonneesCible.getX() % (getWidth() - 400)) + 150,
-                    (coordonneesCible.getY() % (getHeight() - 400)) + 150,
-                    (coordonneesCible.getX() % (getWidth() - 400)) + 350,
-                    (coordonneesCible.getY() % (getHeight() - 400)) + 350), null);
+            canvas.drawBitmap(cibleBitmap, null, new Rect((int)(coordonneesCible.getX() % (getWidth() - 400)) + 150,
+                    (int)(coordonneesCible.getY() % (getHeight() - 400)) + 150,
+                    (int)(coordonneesCible.getX() % (getWidth() - 400)) + TARGET_SIZE,
+                    (int)(coordonneesCible.getY() % (getHeight() - 400)) + TARGET_SIZE), null);
 
             // On affiche la balle
             canvas.drawCircle(ball.getX(), ball.getY(),ball.getRadius(), ballePaint);
@@ -133,8 +129,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         drawingThread.start();
         depthThread.setRunning(true);
         depthThread.start();
-        targetManagerThread.setRunning(true);
-        targetManagerThread.start();
+        addTarget();
 
     }
 
@@ -159,8 +154,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 drawingThread.join();
                 depthThread.setRunning(false);
                 depthThread.join();
-                targetManagerThread.setRunning(false);
-                targetManagerThread.join();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -171,15 +164,40 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Méthode modifiant le rayon du cercle pour l'axe Z
+     * Méthode modifiant le rayon du cercle pour l'axe Z.
+     * Si la balle touche le sol, la cible change de position
+     * De plus, si la balle était dans la cible, on compte un point.
      */
     public void setCircleRadius() {
+        float xBall = ball.getX();
+        float yBall = ball.getY();
         float calc = SPEED_BOUNCE * (ball.getRadius()/(Ball.RADIUS_MAX - Ball.RADIUS_MIN));
         depthThread.setDepthDelay((int)calc);
-        if (ball.getRadius() == Ball.RADIUS_MAX || ball.getRadius() == Ball.RADIUS_MIN) {
+        if (ball.getRadius() == Ball.RADIUS_MIN) {
+            // La hitbox de la cible.
+            float coordonneesCibleXMin = coordonneesCible.getX() % (getWidth() - 400) + 150;
+            float coordonneesCibleXMax = coordonneesCible.getX() % (getWidth() - 400) + TARGET_SIZE;
+            float coordonneesCibleYMin = coordonneesCible.getY() % (getHeight() - 400) + 150;
+            float coordonneesCibleYMax = coordonneesCible.getY() % (getWidth() - 400) + TARGET_SIZE;
+
+            // Si les coordonnées de la balle sont dans la cible, on compte un point
+            if ((xBall <= coordonneesCibleXMax && xBall >= coordonneesCibleXMin) &&
+                    (yBall <= coordonneesCibleYMax && yBall >= coordonneesCibleYMin) &&
+                    incrementRadius < 0) {
+                // Là où on compte un point
+                System.out.println("Oklm on est dedans");
+            }
+
+            // Lorsque la balle touche le sol, on change la position de la cible.
+            addTarget();
+
+            // On modifie l'incrément du rayon de la balle, pour aller dans le sens inverse
+            incrementRadius = -incrementRadius;
+        } else if (ball.getRadius() == Ball.RADIUS_MAX) {
             incrementRadius = -incrementRadius;
         }
         ball.setRadius(ball.getRadius() + incrementRadius);
+
     }
 
     /**
@@ -229,6 +247,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public int getTargetSpawnDelay() {
         return targetSpawnDelay;
+    }
+
+    /**
+     * Getter coordonneesCible.
+     *
+     * @return coordonneesCible
+     */
+    public Coordonnees getCoordonneesCible() {
+        return coordonneesCible;
     }
 
     /**

@@ -43,7 +43,7 @@ public class DepthThread extends Thread {
     }
 
     /**
-     * Runnable permettant de déplacer les ennemis et les projectiles périodiquement.
+     * Runnable permettant de déplacer la balle périodiquement.
      */
     public Runnable moveDepthBall = new Runnable() {
         @Override

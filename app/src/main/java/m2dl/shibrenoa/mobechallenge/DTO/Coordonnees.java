@@ -1,4 +1,4 @@
-package m2dl.shibrenoa.mobechallenge.threads;
+package m2dl.shibrenoa.mobechallenge.DTO;
 
 /**
  * Classe permettant de gérer les objets en mouvement.
@@ -8,17 +8,17 @@ public class Coordonnees {
     /**
      * Coordonnée sur l'axe horizontal.
      */
-    private int x;
+    private float x;
 
     /**
      * Coordonnée sur l'axe vertical.
      */
-    private int y;
+    private float y;
 
     /**
      * Constructeur public.
      */
-    public Coordonnees(int x, int y) {
+    public Coordonnees(float x, float y) {
          this.x = x;
          this.y = y;
     }
@@ -28,7 +28,7 @@ public class Coordonnees {
      *
      * @return x
      */
-    public int getX() {
+    public float getX() {
         return x;
     }
 
@@ -37,7 +37,7 @@ public class Coordonnees {
      *
      * @return y
      */
-    public int getY() {
+    public float getY() {
         return y;
     }
 
@@ -46,7 +46,7 @@ public class Coordonnees {
      *
      * @param x
      */
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
@@ -55,7 +55,7 @@ public class Coordonnees {
      *
      * @param y
      */
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 
