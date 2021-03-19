@@ -15,7 +15,7 @@ import m2dl.shibrenoa.mobechallenge.views.GameView;
 public class ChangeBallCapacityThread extends Thread {
 
     /**
-     * Déplacement à effectuer pour les ennemis.
+     * Vitesse de rebond de la balle.
      */
     private static final int SPEED_BOUNCE_MIN = 8;
     private static final int SPEED_BOUNCE_MAX = 20;
@@ -80,7 +80,7 @@ public class ChangeBallCapacityThread extends Thread {
     @Override
     public void run() {
         if (running) {
-            handler.postDelayed(slowEnnemiesDisable, 0);
+            handler.postDelayed(slowBallDisable, 0);
         }
     }
 
@@ -95,28 +95,28 @@ public class ChangeBallCapacityThread extends Thread {
         public void onSensorChanged(SensorEvent sensorEvent) {
             //System.out.println(sensorEvent.values[0]);
             if (isSlowReady && sensorEvent.values[0] < TRESHOLD_LUX) {
-                handler.postDelayed(slowEnnemiesEnable, 0);
+                handler.postDelayed(slowBallEnable, 0);
             }
         }
     };
 
     /**
-     * La vitesse des ennemis est ralentie et désactive l'utilisation de cette capacité
+     * La vitesse de la balle est ralentie et désactive l'utilisation de cette capacité.
      */
-    private final Runnable slowEnnemiesEnable = new Runnable() {
+    private final Runnable slowBallEnable = new Runnable() {
         @Override
         public void run() {
             isSlowReady = false;
             //gameView.setSnowflakeVisible(false);
             gameView.setSpeedBounce(SPEED_BOUNCE_MAX);
-            handler.postDelayed(slowEnnemiesDisable, DIX_SECONDES);
+            handler.postDelayed(slowBallDisable, DIX_SECONDES);
         }
     };
 
     /**
-     * La vitesse des ennemis revient à la normale
+     * La vitesse de la balle revient à la normale.
      */
-    private final Runnable slowEnnemiesDisable = new Runnable() {
+    private final Runnable slowBallDisable = new Runnable() {
         @Override
         public void run() {
             gameView.setSpeedBounce(SPEED_BOUNCE_MIN);
@@ -125,7 +125,7 @@ public class ChangeBallCapacityThread extends Thread {
     };
 
     /**
-     * Réactive la capacité pour ralentir les ennemis
+     * Réactive la capacité pour ralentir la balle.
      */
     private final Runnable enableSlowSkill = new Runnable() {
         @Override
