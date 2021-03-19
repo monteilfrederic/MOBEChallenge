@@ -219,7 +219,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On peint le fond
             canvas.drawBitmap(backgroundBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
-            canvas.drawBitmap(backgroundGlassBitmap, null, new Rect(-5, 0, this.getWidth() + 5, this.getHeight()), null);
 
             // On peint la balle
             Paint ballePaint = new Paint();
