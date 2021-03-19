@@ -1,4 +1,4 @@
-package m2dl.shibrenoa.mobechallenge.threads;
+package m2dl.shibrenoa.mobechallenge.DTO;
 
 /**
  * Classe permettant de gérer les objets en mouvement.

@@ -1,22 +1,22 @@
 package m2dl.shibrenoa.mobechallenge.views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.hardware.SensorManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.Random;
 
 import m2dl.shibrenoa.mobechallenge.R;
-import m2dl.shibrenoa.mobechallenge.threads.Coordonnees;
+import m2dl.shibrenoa.mobechallenge.DTO.Coordonnees;
 import m2dl.shibrenoa.mobechallenge.DTO.Ball;
-import m2dl.shibrenoa.mobechallenge.activities.EndMenuActivity;
+import m2dl.shibrenoa.mobechallenge.threads.ChangeBallCapacityThread;
 import m2dl.shibrenoa.mobechallenge.threads.TargetManagerThread;
 import m2dl.shibrenoa.mobechallenge.threads.DrawingThread;
 import m2dl.shibrenoa.mobechallenge.threads.DepthThread;
@@ -24,12 +24,7 @@ import m2dl.shibrenoa.mobechallenge.threads.DepthThread;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
-     * Vitesse de rebond de la balle (formule).
-     */
-    private static int SPEED_BOUNCE = 10;
-
-    /**
-    * Délais entre les apparitions d'ennemis.
+    * Délais entre les apparitions de cibles.
     */
     private int targetSpawnDelay;
 
@@ -59,9 +54,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private final DepthThread depthThread;
 
     /**
+     * Thread s'occupant du changement de balle.
+     */
+    private final ChangeBallCapacityThread changeBallCapacityThread;
+
+    /**
      * Increment du changement de radius;
      */
     private int incrementRadius = 1;
+
+    /**
+     * Vitesse de rebond de la balle (formule).
+     */
+    private int speedBounce;
 
     /**
      * Balle de jeu.
@@ -74,6 +79,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap cibleBitmap;
 
     /**
+     * Gestionnaire des capteurs.
+     */
+    private final SensorManager sensorManager;
+
+    /**
      * Constructeur public initialisant les threads.
      *
      * @param context Contexte de la surfaceView
@@ -82,10 +92,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         getHolder().addCallback(this);
 
+        // Initialisation du gestionnaire de capteurs
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
         // Initialisation des threads
         targetManagerThread = new TargetManagerThread(this);
-        drawingThread = new DrawingThread(getHolder(), this);
+        changeBallCapacityThread = new ChangeBallCapacityThread(this);
         depthThread = new DepthThread(this);
+        drawingThread = new DrawingThread(getHolder(), this);
+
         decodageImages();
         setFocusable(true);
         // TODO : mettre lorsque fin du jeu
@@ -129,12 +144,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         ball = new Ball(getWidth()/2f,getHeight()/2f, Ball.RADIUS_MIN+1);
 
-        drawingThread.setRunning(true);
-        drawingThread.start();
-        depthThread.setRunning(true);
-        depthThread.start();
         targetManagerThread.setRunning(true);
         targetManagerThread.start();
+        changeBallCapacityThread.setRunning(true);
+        changeBallCapacityThread.start();
+        depthThread.setRunning(true);
+        depthThread.start();
+        drawingThread.setRunning(true);
+        drawingThread.start();
 
     }
 
@@ -155,12 +172,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         while (retry) {
             try {
 
-                drawingThread.setRunning(false);
-                drawingThread.join();
-                depthThread.setRunning(false);
-                depthThread.join();
                 targetManagerThread.setRunning(false);
                 targetManagerThread.join();
+                changeBallCapacityThread.setRunning(false);
+                changeBallCapacityThread.join();
+                depthThread.setRunning(false);
+                depthThread.join();
+                drawingThread.setRunning(false);
+                drawingThread.join();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -174,7 +193,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Méthode modifiant le rayon du cercle pour l'axe Z
      */
     public void setCircleRadius() {
-        float calc = SPEED_BOUNCE * (ball.getRadius()/(Ball.RADIUS_MAX - Ball.RADIUS_MIN));
+        float calc = speedBounce * (ball.getRadius()/(Ball.RADIUS_MAX - Ball.RADIUS_MIN));
         depthThread.setDepthDelay((int)calc);
         if (ball.getRadius() == Ball.RADIUS_MAX || ball.getRadius() == Ball.RADIUS_MIN) {
             incrementRadius = -incrementRadius;
@@ -238,5 +257,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void setTargetSpawnDelay(int targetSpawnDelay) {
         this.targetSpawnDelay = targetSpawnDelay;
+    }
+
+    /**
+     * Setter speedBounce
+     *
+     * @return speedBounce
+     */
+    public int getSpeedBounce() {
+        return speedBounce;
+    }
+
+    /**
+     * Setter speedBounce
+     *
+     * @return speedBounce
+     */
+    public void setSpeedBounce(int speedBounce) {
+        this.speedBounce = speedBounce;
+    }
+
+    /**
+     * Getter sensorManager
+     *
+     * @return sensorManager
+     */
+    public SensorManager getSensorManager() {
+        return sensorManager;
     }
 }
