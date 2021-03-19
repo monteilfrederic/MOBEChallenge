@@ -8,12 +8,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.Random;
 
 import m2dl.shibrenoa.mobechallenge.R;
+import m2dl.shibrenoa.mobechallenge.listener.AcceleroSensor;
 import m2dl.shibrenoa.mobechallenge.threads.Coordonnees;
 import m2dl.shibrenoa.mobechallenge.DTO.Ball;
 import m2dl.shibrenoa.mobechallenge.activities.EndMenuActivity;
@@ -59,6 +62,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private final DepthThread depthThread;
 
     /**
+     * Listener s'occupant du mouvement de la balle.
+     */
+    private final AcceleroSensor acceleroSensor;
+    /**
      * Increment du changement de radius;
      */
     private int incrementRadius = 1;
@@ -74,6 +81,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap cibleBitmap;
 
     /**
+     * Gestionnaire des capteurs.
+     */
+    private final SensorManager sensorManager;
+
+    /**
+     * Multiplicateur de vitesse de la balle (+ c'est grand, plus la balle se deplace vite)
+     */
+    private float multiplyMove = 10.0f;
+
+    /**
      * Constructeur public initialisant les threads.
      *
      * @param context Contexte de la surfaceView
@@ -86,12 +103,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         targetManagerThread = new TargetManagerThread(this);
         drawingThread = new DrawingThread(getHolder(), this);
         depthThread = new DepthThread(this);
+
+        // Initialisation du listener
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
         decodageImages();
         setFocusable(true);
         // TODO : mettre lorsque fin du jeu
         //getContext().startActivity(new Intent(getContext(), EndMenuActivity.class));
 
+        acceleroSensor = new AcceleroSensor(this);
+        Sensor accelerometre = getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        getSensorManager().registerListener(acceleroSensor, accelerometre, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
+
 
     /**
      * {@inheritDoc}
@@ -238,5 +264,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void setTargetSpawnDelay(int targetSpawnDelay) {
         this.targetSpawnDelay = targetSpawnDelay;
+    }
+
+    private SensorManager getSensorManager() {
+        return sensorManager;
+    }
+
+
+    public void moveBallHorizon(float x) {
+        if (ball.getX() < 0 ) {
+            ball.setX(getWidth());
+        } else {
+            int xint = (int) (x * multiplyMove);
+            ball.setX((ball.getX() - xint) % getWidth());
+        }
+    }
+
+    public void moveBallVertical(float y) {
+        if (ball.getY() < 0 ) {
+            ball.setY(getHeight());
+        }
+        int yint = (int) (y*multiplyMove);
+        ball.setY((ball.getY()+yint) % getHeight());
     }
 }
