@@ -15,16 +15,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MOBEChallenge">
-        <activity android:name=".activities.HomeMenuActivity">
+        <activity android:name=".activities.HomeMenuActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LeaderboardActivity"/>
-        <activity android:name=".activities.EndMenuActivity" />
-        <activity android:name=".activities.GameActivity" />
+        <activity android:name=".activities.LeaderboardActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.EndMenuActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.GameActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
