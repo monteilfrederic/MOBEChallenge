@@ -293,7 +293,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (ball.getRadius() == Ball.RADIUS_MIN) {
 
             // On fait vibrer le téléphone
-            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            //vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
             // La hitbox de la cible.
             float coordonneesCibleXMin = coordonneesCible.getX() % (getWidth() - TARGET_INTERVAL) + TARGET_MARGIN;
@@ -310,9 +310,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             } else if (nbLives == 0){
                 // Sinon on a plus qu'une vie, on arrête les threads et on change d'activité
-                changeBallCapacityThread.setRunning(false);
-                depthThread.setRunning(false);
-                drawingThread.setRunning(false);
+                try {
+                    changeBallCapacityThread.setRunning(false);
+                    changeBallCapacityThread.join();
+                    depthThread.setRunning(false);
+                    depthThread.join();
+                    drawingThread.setRunning(false);
+                    drawingThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 // On change d'activité
                 Intent intent = new Intent(getContext(), EndMenuActivity.class);
