@@ -3,14 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/home_menu_button"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/home_menu_button_text"
-        android:fontFamily="@font/minecraft"
-        android:textSize="75sp"
-        android:onClick="click"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/leaderboard_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="175dp"
+            android:fontFamily="@font/minecraft"
+            android:text="@string/leaderboard_title_text"
+            android:textSize="50sp" />
+
+        <TableLayout
+            android:id="@+id/scores_table_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:layout_below="@id/leaderboard_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:id="@+id/home_menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scores_table_layout"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/minecraft"
+            android:onClick="click"
+            android:text="@string/home_menu_button_text"
+            android:textSize="75sp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

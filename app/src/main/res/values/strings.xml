@@ -4,4 +4,11 @@
     <string name="save_score_button_text">enregistrer</string>
     <string name="restart_game_button_text">rejouer</string>
     <string name="home_menu_button_text">menu</string>
+    <string name="fifth_rank">5th</string>
+    <string name="fourth_rank">4th</string>
+    <string name="third_rank">3rd</string>
+    <string name="second_rank">2nd</string>
+    <string name="first_rank">1st</string>
+    <string name="leaderboard_title_text">meilleurs scores</string>
+    <string name="saved_score_button_text">score enregistre !</string>
 </resources>

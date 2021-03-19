@@ -1,4 +1,4 @@
-package m2dl.shibrenoa.mobechallenge.DTO;
+package m2dl.shibrenoa.mobechallenge.dto;
 
 public class Ball {
 
