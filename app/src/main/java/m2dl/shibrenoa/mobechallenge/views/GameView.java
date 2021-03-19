@@ -191,7 +191,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // On peint la balle
             Paint ballePaint = new Paint();
-            ballePaint.setColor(Color.RED);
+            int couleur = 255 - ((int)ball.getRadius());
+            ballePaint.setColor(Color.rgb(couleur, 0, 0));
 
             // On affiche la cible
             // On récupère les coordonnées des cibles modulo la taille de l'écran -400 pour garder de la marge afin que la cible ne touche pas les bords
