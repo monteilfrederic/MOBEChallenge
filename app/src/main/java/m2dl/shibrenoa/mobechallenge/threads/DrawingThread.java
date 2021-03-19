@@ -37,6 +37,7 @@ public class DrawingThread extends Thread {
         super();
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
+        gameView.setTargetSpawnDelay(10);
     }
 
     /**

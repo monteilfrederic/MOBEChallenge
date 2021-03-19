@@ -10,9 +10,9 @@ import android.view.WindowManager;
 import m2dl.shibrenoa.mobechallenge.R;
 
 /**
- * Activité correspondant au menu de fin.
+ * Activité correspondant à la page du classement.
  */
-public class EndMenuActivity extends AppCompatActivity {
+public class LeaderboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,19 +25,17 @@ public class EndMenuActivity extends AppCompatActivity {
         //  On cache l'ACTIONBAR
         this.getSupportActionBar().hide();
 
-        // On initialise la view avec le menu de fin
-        setContentView(R.layout.activity_end_menu);
+        // On initialise la view avec la page des scores
+        setContentView(R.layout.activity_leaderboard);
+
     }
 
     /**
-     * Méthode relançant le jeu
+     * Méthode gérant les clicks
      */
     public void click(View view) {
-        if (view.getId() == R.id.restart_game_button) {
-            startActivity(new Intent(this, GameActivity.class));
-        } else if (view.getId() == R.id.leaderboard_button2) {
-            startActivity(new Intent(this, LeaderboardActivity.class));
+        if (view.getId() == R.id.home_menu_button) {
+            startActivity(new Intent(this, HomeMenuActivity.class));
         }
     }
-
 }
