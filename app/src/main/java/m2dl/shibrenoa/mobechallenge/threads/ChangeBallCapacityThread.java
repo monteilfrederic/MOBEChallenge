@@ -106,10 +106,12 @@ public class ChangeBallCapacityThread extends Thread {
     private final Runnable slowBallEnable = new Runnable() {
         @Override
         public void run() {
-            isSlowReady = false;
-            //gameView.setSnowflakeVisible(false);
-            gameView.setSpeedBounce(SPEED_BOUNCE_MAX);
-            handler.postDelayed(slowBallDisable, DIX_SECONDES);
+            if (running) {
+                isSlowReady = false;
+                //gameView.setSnowflakeVisible(false);
+                gameView.setSpeedBounce(SPEED_BOUNCE_MAX);
+                handler.postDelayed(slowBallDisable, DIX_SECONDES);
+            }
         }
     };
 
@@ -119,8 +121,10 @@ public class ChangeBallCapacityThread extends Thread {
     private final Runnable slowBallDisable = new Runnable() {
         @Override
         public void run() {
-            gameView.setSpeedBounce(SPEED_BOUNCE_MIN);
-            handler.postDelayed(enableSlowSkill, DIX_SECONDES);
+            if (running) {
+                gameView.setSpeedBounce(SPEED_BOUNCE_MIN);
+                handler.postDelayed(enableSlowSkill, DIX_SECONDES);
+            }
         }
     };
 
@@ -130,9 +134,11 @@ public class ChangeBallCapacityThread extends Thread {
     private final Runnable enableSlowSkill = new Runnable() {
         @Override
         public void run() {
-            isSlowReady = true;
-            toast.show();
-            //gameView.setSnowflakeVisible(true);
+            if (running) {
+                isSlowReady = true;
+                toast.show();
+                //gameView.setSnowflakeVisible(true);
+            }
         }
     };
 
