@@ -56,13 +56,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int nbLives = 2;
 
     /**
-<<<<<<< HEAD
-=======
-    * Délais entre les apparitions d'ennemis.
-    */
-    private int targetSpawnDelay;
-
-    /**
      * Valeur du score actuel du joueur
      */
     private int valeurScore = 0;
@@ -73,7 +66,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint score;
 
     /**
->>>>>>> main
      * Coordonnées de la cible actuelle.
      */
     volatile Coordonnees coordonneesCible;
