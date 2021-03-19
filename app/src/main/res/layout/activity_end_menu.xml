@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_200">
+    android:background="@drawable/forest">
 
     <TextView
         android:id="@+id/text_view_score"
@@ -18,8 +18,8 @@
         android:id="@+id/score_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/text_view_score"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp">
 
         <RelativeLayout
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/up"
-                android:onClick="lettrePrecedente"/>
+                android:onClick="lettrePrecedente" />
 
             <TextView
                 android:id="@+id/text_view_lettre1"
@@ -55,7 +55,7 @@
                 android:layout_below="@+id/text_view_lettre1"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/down"
-                android:onClick="lettreSuivante"/>
+                android:onClick="lettreSuivante" />
 
         </RelativeLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_below="@+id/text_view_lettre2"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/down"
-                android:onClick="lettreSuivante"/>
+                android:onClick="lettreSuivante" />
 
         </RelativeLayout>
 
@@ -129,7 +129,7 @@
                 android:layout_below="@+id/text_view_lettre3"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/down"
-                android:onClick="lettreSuivante"/>
+                android:onClick="lettreSuivante" />
 
         </RelativeLayout>
 
